@@ -1,0 +1,70 @@
+// whip_phone core icons: status-bar glyphs (GLYPH) and a small generic UI set (I) the kit and modules can use.
+// App icons are not here: every module brings its own glyph (24x24-ish SVG drawn in currentColor).
+const sv = (b, w = 1.9) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round">${b}</svg>`;
+const sf = (b, extra = '') => `<svg viewBox="0 0 24 24" fill="currentColor" ${extra}>${b}</svg>`;
+
+export const GLYPH = {
+  signal: `<svg viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx=".8"/><rect x="5" y="5.5" width="3" height="6.5" rx=".8"/><rect x="10" y="3" width="3" height="9" rx=".8"/><rect x="15" y="0" width="3" height="12" rx=".8"/></svg>`,
+  wifi: `<svg viewBox="0 0 16 12" fill="#fff"><path d="M8 11.6l2.2-2.6a3.4 3.4 0 0 0-4.4 0zM3.7 6.6l1.3 1.6a4.7 4.7 0 0 1 6 0l1.3-1.6a6.8 6.8 0 0 0-8.6 0zM1.2 3.6l1.3 1.6a8.6 8.6 0 0 1 11 0l1.3-1.6A10.7 10.7 0 0 0 1.2 3.6z"/></svg>`,
+  plane: `<svg viewBox="0 0 16 16" fill="#fff"><path d="M15 9.5v-1.6L9.2 4.6V1.4C9.2.6 8.6 0 8 0s-1.2.6-1.2 1.4v3.2L1 7.9v1.6l5.8-1.8v3.4l-1.6 1.2V14L8 13.2l2.8.8v-1.6l-1.6-1.2V7.7z"/></svg>`,
+  battery: (pct) => `<svg viewBox="0 0 27 13"><rect x=".6" y=".6" width="22.8" height="11.8" rx="3.4" fill="none" stroke="currentColor" stroke-opacity=".45" stroke-width="1.2"/><rect x="2.2" y="2.2" width="${(19.6 * pct / 100).toFixed(1)}" height="8.6" rx="2.2" fill="currentColor"/><path d="M25 4.5v4a2 2 0 0 0 0-4z" fill="currentColor" fill-opacity=".45"/></svg>`,
+  tablet: `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="2.5" y="3.5" width="15" height="13" rx="2"/><path d="M8 14.2h4"/></svg>`,
+  back: `<svg viewBox="0 0 12 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2L2 10l8 8"/></svg>`,
+  send: `<svg viewBox="0 0 20 20" fill="#fff"><path d="M10 3.2l5.6 5.6-1.4 1.4-3.2-3.2V17H9V7l-3.2 3.2-1.4-1.4z"/></svg>`,
+  flash: `<svg viewBox="0 0 24 24" fill="#fff"><path d="M8 2.5h8l-1 5.5h-6zM9 9h6l-1 6.5V21h-4v-5.5z"/></svg>`,
+  cam: `<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><path d="M4 8.5h3l1.6-2.2h6.8L17 8.5h3v9.7H4z"/><circle cx="12" cy="13.2" r="3.4"/></svg>`,
+  fold: `<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linejoin="round"><path d="M3.5 6h8.5v12H3.5zM12 6l8.5-2v16L12 18"/></svg>`,
+  moon: `<svg viewBox="0 0 24 24" fill="#fff"><path d="M14.5 3.5a8.5 8.5 0 1 0 6 13.9A7 7 0 0 1 14.5 3.5z"/></svg>`,
+  bt: `<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7l10 10-5 4V3l5 4L7 17"/></svg>`,
+  search: `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M13 13l4 4"/></svg>`,
+  plus: `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M10 4v12M4 10h12"/></svg>`,
+  pin: `<svg viewBox="0 0 24 24" fill="#ff3b30"><path d="M12 2.5a6.5 6.5 0 0 0-6.5 6.5c0 4.9 6.5 12.5 6.5 12.5S18.5 13.9 18.5 9A6.5 6.5 0 0 0 12 2.5z"/><circle cx="12" cy="9" r="2.4" fill="#fff"/></svg>`,
+  handset: `<svg viewBox="0 0 24 24" fill="#fff"><path d="M7.2 3.2c.6-.3 1.3-.1 1.6.5l1.5 3.1c.3.6.1 1.3-.4 1.7l-1.3 1c.9 2.1 2.6 3.8 4.7 4.7l1-1.3c.4-.5 1.1-.7 1.7-.4l3.1 1.5c.6.3.8 1 .5 1.6l-.9 1.9c-.4.8-1.3 1.3-2.2 1.2C9.9 18.3 4.5 12.9 4.1 6.3C4 5.4 4.5 4.5 5.3 4.1z"/></svg>`,
+  shutter: `<svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="27" fill="none" stroke="#fff" stroke-width="4"/><circle cx="30" cy="30" r="22" fill="#fff"/></svg>`,
+};
+
+export const I = {
+  chev: '<svg class="chev" viewBox="0 0 8 13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 1.5l5 5-5 5"/></svg>',
+  check: sv('<path d="M5 12.5l4.5 4.5L19 7.5"/>', 2.4),
+  bell: sf('<path d="M12 3a6 6 0 0 0-6 6v3.6l-1.6 2.8c-.4.7.1 1.6.9 1.6h13.4c.8 0 1.3-.9.9-1.6L18 12.6V9a6 6 0 0 0-6-6zm-2.5 15.5a2.5 2.5 0 0 0 5 0z"/>'),
+  speaker: '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M3.5 9h3.8L12 5v14l-4.7-4H3.5z"/><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12"/></svg>',
+  gear: sv('<circle cx="12" cy="12" r="3"/><path d="M12 2.8v2.4M12 18.8v2.4M21.2 12h-2.4M5.2 12H2.8M18.5 5.5l-1.7 1.7M7.2 16.8l-1.7 1.7M18.5 18.5l-1.7-1.7M7.2 7.2L5.5 5.5"/>', 2.2),
+  sun: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2" fill="currentColor"/><path d="M12 1.8v3M12 19.2v3M22.2 12h-3M4.8 12h-3M19.2 4.8l-2.1 2.1M6.9 17.1l-2.1 2.1M19.2 19.2l-2.1-2.1M6.9 6.9L4.8 4.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
+  aa: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 18L8 5.5h2L15 18h-2.2l-1.2-3.2H6.4L5.2 18zm4.1-5h3.8L9 8z"/><path d="M15.5 18l3-7.5h1.6l3 7.5h-1.7l-.7-1.9h-2.8l-.7 1.9zm2.9-3.3h1.8l-.9-2.4z"/></svg>',
+  flower: sf('<circle cx="12" cy="6.8" r="3.3"/><circle cx="12" cy="17.2" r="3.3"/><circle cx="6.8" cy="12" r="3.3"/><circle cx="17.2" cy="12" r="3.3"/>'),
+  battery: sf('<rect x="2.5" y="7" width="17" height="10" rx="2.5"/><rect x="20.5" y="10" width="1.8" height="4" rx=".9"/>'),
+  hand: sf('<path d="M8 11V5.5a1.5 1.5 0 0 1 3 0V10V4a1.5 1.5 0 0 1 3 0v6V5.5a1.5 1.5 0 0 1 3 0V14c0 4-2.5 7-6.5 7-2.6 0-4-1.2-5.3-3.3L3.5 14c-.6-1 .6-2.2 1.6-1.5L8 14.5z"/>'),
+  compose: sv('<path d="M12 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-6"/><path d="M17.5 3.5l3 3L12 15l-4 1 1-4z"/>'),
+  star: sf('<path d="M12 3.2l2.7 5.6 6.1.8-4.5 4.2 1.1 6-5.4-2.9-5.4 2.9 1.1-6-4.5-4.2 6.1-.8z"/>'),
+  recent: sv('<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>'),
+  person: sf('<circle cx="12" cy="8" r="4"/><path d="M4 20.5c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5z"/>'),
+  keypad: sf([0, 1, 2].flatMap((r) => [0, 1, 2].map((c) => `<circle cx="${6 + c * 6}" cy="${5 + r * 6}" r="2.1"/>`)).join('')),
+  mic: sv('<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M4 4l16 16"/>'),
+  video: sv('<rect x="3" y="6.5" width="12.5" height="11" rx="2.5"/><path d="M15.5 10.5l5-3v9l-5-3z"/>'),
+  plus: sv('<path d="M12 5v14M5 12h14"/>', 2.2),
+  heart: sv('<path d="M12 20s-7.5-4.6-7.5-10A4.3 4.3 0 0 1 12 7.4 4.3 4.3 0 0 1 19.5 10c0 5.4-7.5 10-7.5 10z"/>'),
+  heartF: sf('<path d="M12 20s-7.5-4.6-7.5-10A4.3 4.3 0 0 1 12 7.4 4.3 4.3 0 0 1 19.5 10c0 5.4-7.5 10-7.5 10z"/>'),
+  share: sv('<path d="M12 15V3.5M8 7.5l4-4 4 4M5 12v7.5h14V12"/>'),
+  send: sf('<path d="M3.5 11.2L20 4l-7.2 16.5-2.1-7.2z"/>'),
+  money: sv('<path d="M12 3v18M16.5 7.5c-.6-1.6-2.4-2.5-4.5-2.5-2.5 0-4.5 1.4-4.5 3.3 0 4.4 9 2.2 9 6.9 0 1.9-2 3.3-4.5 3.3-2.3 0-4.2-1-4.8-2.8"/>'),
+  card: sv('<rect x="3" y="5.5" width="18" height="13" rx="2.5"/><path d="M3 10h18M7 15h3"/>'),
+  lock: sf('<path d="M7 10.5V8a5 5 0 0 1 10 0v2.5h.5A1.5 1.5 0 0 1 19 12v7.5a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 5 19.5V12a1.5 1.5 0 0 1 1.5-1.5zm2 0h6V8a3 3 0 0 0-6 0z"/>'),
+  globe: sv('<circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.4 2.4 3.6 5.2 3.6 8.5s-1.2 6.1-3.6 8.5c-2.4-2.4-3.6-5.2-3.6-8.5s1.2-6.1 3.6-8.5z"/>'),
+  del: '<svg viewBox="0 0 30 22" fill="currentColor"><path d="M9.5 1h17A2.5 2.5 0 0 1 29 3.5v15a2.5 2.5 0 0 1-2.5 2.5h-17L1 11z" opacity=".9"/><path d="M14 7l8 8M22 7l-8 8" stroke="var(--bg)" stroke-width="2" stroke-linecap="round"/></svg>',
+  search: GLYPH.search,
+  x: sv('<path d="M6 6l12 12M18 6L6 18"/>', 2.2),
+  edit: sv('<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/>'),
+  trash: sv('<path d="M4.5 7h15M9.5 7V4.5h5V7M6.5 7l1 13h9l1-13"/>'),
+  msg: sf('<path d="M12 4c4.7 0 8.5 3 8.5 6.8S16.7 17.6 12 17.6c-.9 0-1.8-.1-2.6-.3L5.6 19.4l1.1-3.3C4.8 14.9 3.5 13 3.5 10.8 3.5 7 7.3 4 12 4z"/>'),
+  call: GLYPH.handset,
+  back: GLYPH.back,
+  apps: sf('<rect x="4" y="4" width="6.5" height="6.5" rx="1.8"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.8"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.8"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.8"/>'),
+  info: sv('<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.6v.1"/>', 2.1),
+  block: sv('<circle cx="12" cy="12" r="8.5"/><path d="M6 6l12 12"/>', 2.1),
+  ask: sv('<path d="M8.6 8.6a3.4 3.4 0 1 1 4.9 3.05c-.95.45-1.5 1.25-1.5 2.25v.7M12 18.4v.1"/>', 2.6),
+  missed: sv('<path d="M5 6l6 6 4-4M15 8h-4V4"/><path d="M4.5 17.5a11 11 0 0 1 15 0"/>'),
+  out: sv('<path d="M8 16L18 6M10 6h8v8"/>'),
+};
+
+/** an app icon: the module's glyph inside the icon tile (each whip style turns .ico into its own look) */
+export const appIcon = (id, glyph) => `<div class="ico" data-app="${id}">${glyph || I.apps}</div>`;

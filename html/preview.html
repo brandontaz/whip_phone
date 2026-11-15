@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!--ARTIFACT-START-->
+<title>whip_phone Preview</title>
+<meta name="darkreader-lock">
+<style>
+  /* Browser preview of the real phone resource: the same core and modules as in game, a mock framework behind the
+     bridge (dev/mock.js), and a dev bar to play the Lua side (modes, pushes, which modules are installed). */
+  :root {
+    --bg: #0b0e1a; --bg2: #111426; --bg3: #1a1424; --ink: #eef1f7; --ink2: rgba(238, 241, 247, .62); --line: rgba(255, 255, 255, .12);
+    --bar: rgba(10, 12, 22, .86); --bar2: rgba(10, 12, 22, .55); --btn: rgba(255, 255, 255, .07); --btn-hover: rgba(255, 255, 255, .13);
+    --primary: #ffffff; --primary-ink: #111111; --focus: #66d9ff; --ok: #30d158; --busy: #ff9f0a;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; overflow: hidden; }
+  body {
+    font: 14px/1.4 "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, sans-serif; color: var(--ink);
+    background:
+      radial-gradient(60% 50% at 12% 105%, rgba(255, 140, 60, .30), transparent 70%),
+      radial-gradient(45% 45% at 92% 8%, rgba(160, 80, 255, .22), transparent 70%),
+      radial-gradient(70% 60% at 60% 60%, rgba(40, 110, 200, .18), transparent 70%),
+      linear-gradient(180deg, var(--bg) 0%, var(--bg2) 55%, var(--bg3) 100%);
+    background-color: var(--bg); -webkit-tap-highlight-color: transparent;
+  }
+  #gl { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  #os-layer { position: fixed; inset: 0; pointer-events: none; overflow: hidden; }
+  /* the dev bar's styles are pinned to #bar: bare element selectors here would reach into the phone's apps */
+  #bar {
+    position: fixed; left: 0; right: 0; top: 0; z-index: 5;
+    min-height: calc(60px + env(safe-area-inset-top, 0px)); padding: calc(env(safe-area-inset-top, 0px) + 10px) 18px 10px;
+    display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px;
+    background: linear-gradient(180deg, var(--bar), var(--bar2)); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--line);
+  }
+  .brand { display: flex; align-items: baseline; gap: 8px; white-space: nowrap; margin-right: 6px; }
+  .brand b { font-size: 17px; letter-spacing: -.3px; }
+  .brand span { color: var(--ink2); font-size: 12.5px; }
+  .grp { display: flex; align-items: center; gap: 8px; }
+  label.sel { display: flex; align-items: center; gap: 7px; color: var(--ink2); font-size: 11.5px; text-transform: uppercase; letter-spacing: .9px; }
+  #bar select, button.ui { height: 34px; border-radius: 10px; border: 1px solid var(--line); background: var(--btn); color: var(--ink); font: inherit; font-size: 13px; cursor: pointer; }
+  #bar select { padding: 0 8px; max-width: 150px; text-transform: none; letter-spacing: 0; }
+  #bar select option { background: var(--bg2); color: var(--ink); }
+  button.ui { padding: 0 12px; font-weight: 600; white-space: nowrap; display: inline-flex; align-items: center; gap: 7px; touch-action: manipulation; }
+  button.ui svg { width: 16px; height: 16px; flex: none; }
+  button.ui:hover, #bar select:hover { background: var(--btn-hover); }
+  button.ui.primary { background: var(--primary); color: var(--primary-ink); border-color: var(--primary); min-width: 84px; justify-content: center; }
+  #bar select:focus-visible, button.ui:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  .right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+  .chip { font-size: 12.5px; color: var(--ink2); padding: 5px 10px; border-radius: 20px; border: 1px solid var(--line); white-space: nowrap; }
+  .chip i { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--ok); margin-right: 7px; vertical-align: 1px; }
+  .chip.moving i { background: var(--busy); }
+  .page-hint { position: fixed; left: 18px; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); color: var(--ink2); font-size: 12.5px; max-width: 380px; line-height: 1.55; z-index: 1; }
+  .page-hint kbd { font: 600 11px/1 ui-monospace, Consolas, monospace; padding: 3px 6px; border-radius: 5px; border: 1px solid var(--line); background: var(--btn); color: var(--ink); }
+  #loading { position: fixed; inset: 0; display: grid; place-items: center; color: var(--ink2); font-size: 15px; z-index: 10; transition: opacity .4s; padding: 0 16px; text-align: center; }
+  body.ready #loading { opacity: 0; pointer-events: none; }
+  @media (max-width: 1180px) { .page-hint, .chip { display: none; } }
+  @media (max-width: 760px) {
+    #bar { padding-left: 12px; padding-right: 12px; gap: 8px; }
+    .brand span, label.sel span, button.ui .lbl { display: none; }
+    #bar select { max-width: 104px; }
+    .right { margin-left: 0; }
+  }
+</style>
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+               "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/" } }
+</script>
+<!--ARTIFACT-HEAD-END-->
+</head>
+<body>
+<!--ARTIFACT-BODY-START-->
+<canvas id="gl"></canvas>
+<div id="os-layer"></div>
+<header id="bar">
+  <div class="brand"><b>whip_phone</b><span>preview · mock framework</span></div>
+  <div class="grp">
+    <label class="sel"><span>Mode</span><select id="mode" aria-label="Phone mode"><option value="hidden">Hidden</option><option value="phone">Phone</option><option value="tablet">Tablet</option></select></label>
+    <button class="ui primary" id="fold" type="button">Unfold</button>
+  </div>
+  <div class="grp">
+    <label class="sel"><span>Layout</span><select id="layout" aria-label="Layout"><option value="auto">Auto</option><option value="console">Console</option><option value="mk">Mouse &amp; keyboard</option></select></label>
+    <label class="sel"><span>Apps</span><select id="apps" aria-label="Installed modules"><option value="phone,messages,bank,business,settings,example,example3d">All + example apps</option><option value="phone,messages,bank,business,settings">Built-in five</option><option value="phone,messages">Phone + Messages</option><option value="settings">Settings only</option><option value="settings,skillcheck,skilltest">Skill Check Tester (developer)</option><option value="">None</option></select></label>
+  </div>
+  <div class="right">
+    <button class="ui" id="n-text" type="button" title="A contact texts you"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4c4.7 0 8.5 3 8.5 6.8S16.7 17.6 12 17.6c-.9 0-1.8-.1-2.6-.3L5.6 19.4l1.1-3.3C4.8 14.9 3.5 13 3.5 10.8 3.5 7 7.3 4 12 4z"/></svg><span class="lbl">Incoming text</span></button>
+    <button class="ui" id="n-call" type="button" title="A contact calls you"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7.2 3.2c.6-.3 1.3-.1 1.6.5l1.5 3.1c.3.6.1 1.3-.4 1.7l-1.3 1c.9 2.1 2.6 3.8 4.7 4.7l1-1.3c.4-.5 1.1-.7 1.7-.4l3.1 1.5c.6.3.8 1 .5 1.6l-.9 1.9c-.4.8-1.3 1.3-2.2 1.2C9.9 18.3 4.5 12.9 4.1 6.3C4 5.4 4.5 4.5 5.3 4.1z"/></svg><span class="lbl">Incoming call</span></button>
+    <button class="ui" id="n-money" type="button" title="Someone sends you money"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.6 2.8 7.4v2.1h18.4V7.4zM4.6 11h2.9v6.6H4.6zm5.95 0h2.9v6.6h-2.9zm5.95 0h2.9v6.6h-2.9zM2.8 19.1h18.4v2.3H2.8z"/></svg><span class="lbl">Money in</span></button>
+    <button class="ui" id="n-note" type="button" title="A framework notification (N)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16.5V11a6 6 0 0 1 12 0v5.5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></svg><span class="lbl">Notification</span></button>
+    <span class="chip" id="state"><i></i>Phone</span>
+  </div>
+</header>
+<div class="page-hint">
+  This is the real phone resource running on a mock framework: calls ring and connect, contacts text back. Garage and Atlas (3D) are example apps from another resource, with their own style.<br>
+  Keys: <kbd>←</kbd><kbd>↑</kbd><kbd>↓</kbd><kbd>→</kbd> move · <kbd>Enter</kbd> select · <kbd>Esc</kbd> back · <kbd>F</kbd> fold · <kbd>H</kbd> hide / show · <kbd>T</kbd> tablet · <kbd>N</kbd> notification.
+</div>
+<div id="loading">Loading the phone…</div>
+<script type="module">
+import { boot } from './core/main.js';
+import { createMock } from './dev/mock.js';
+
+const q = new URLSearchParams(location.search);
+const modules = q.has('modules') ? q.get('modules').split(',').filter(Boolean) : ['phone', 'messages', 'bank', 'business', 'settings', 'example', 'example3d'];
+const mock = createMock({ modules });
+const $ = (id) => document.getElementById(id);
+const modeSel = $('mode'), foldBtn = $('fold'), layoutSel = $('layout'), appsSel = $('apps'), chip = $('state');
+const LABEL = { hidden: 'Hidden', peek: 'Notification peek', phone: 'Phone · cover display', tablet: 'Tablet · inner display' };
+
+const app = boot({ mock, dev: {
+  topBar: $('bar'),
+  onChange: (o, state) => {
+    const hidden = app && app.duo.hidden;
+    foldBtn.textContent = hidden ? 'Show' : o < 0.5 ? 'Unfold' : 'Fold';
+    chip.classList.toggle('moving', !state);
+    chip.lastChild.textContent = LABEL[state] || 'Moving…';
+    if (document.activeElement !== modeSel) modeSel.value = hidden ? 'hidden' : o < 0.5 ? 'phone' : 'tablet';
+  },
+  onLayout: (l) => { layoutSel.value = l; },
+} });
+window.whipPhone = app;
+
+layoutSel.value = app.os.s.layout;
+appsSel.value = modules.join(',');
+if (appsSel.value !== modules.join(',')) appsSel.value = 'phone,messages,bank,business,settings,example,example3d';
+
+// the dev bar plays the Lua side: open / close the phone with focus, like the keybind would
+const setMode = (v) => { if (v === 'hidden') app.close(false); else app.open(v, true); };
+modeSel.addEventListener('change', () => { setMode(modeSel.value); modeSel.blur(); });
+foldBtn.addEventListener('click', () => { if (app.duo.hidden) app.open('phone'); else app.duo.toggle(); });
+layoutSel.addEventListener('change', () => { app.os.setLayout(layoutSel.value); layoutSel.blur(); });   // preview only: not a player setting
+appsSel.addEventListener('change', () => { const u = new URL(location.href); u.searchParams.set('modules', appsSel.value); location.href = u.toString(); });
+$('n-text').addEventListener('click', () => mock.incomingText());
+$('n-call').addEventListener('click', () => mock.incomingCall());
+$('n-money').addEventListener('click', () => mock.incomingMoney());
+$('n-note').addEventListener('click', () => mock.frameworkNotify());
+
+// preview-only keys (in game the Lua keybind opens / closes the phone)
+addEventListener('keydown', (e) => {
+  if (e.target.closest && e.target.closest('input, textarea, select')) return;
+  const k = e.key.toLowerCase();
+  if (k === 'f' || (e.key === ' ' && e.target === document.body)) { e.preventDefault(); if (app.duo.hidden) app.open('phone'); else app.duo.toggle(); }
+  else if (k === 'h') { e.preventDefault(); if (app.duo.hidden) app.open('phone'); else app.close(false); }
+  else if (k === 't') { e.preventDefault(); app.open('tablet'); }
+  else if (k === 'n') { e.preventDefault(); mock.frameworkNotify(); }
+});
+</script>
+<!--ARTIFACT-BODY-END-->
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>whip_phone</title>
+<!-- In-game NUI page: transparent, no page chrome. The phone starts put away; client/main.lua opens it.
+     three.js is vendored (html/vendor/three, MIT) so the phone works for offline players. -->
+<style>
+  html, body { margin: 0; height: 100%; overflow: hidden; background: transparent; }
+  #gl { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  #os-layer { position: fixed; inset: 0; pointer-events: none; overflow: hidden; }
+</style>
+<script type="importmap">
+{ "imports": { "three": "./vendor/three/three.module.min.js", "three/addons/": "./vendor/three/addons/" } }
+</script>
+<!-- whip_core's page tools: tools and tests read and press this page by its words, and its errors are kept for them
+     (whip_core's js/page-tools.js; lib/satellite.lua passes the asks in). -->
+<script src="https://cfx-nui-whip_core/html/js/page-tools.js"></script>
+</head>
+<body>
+<canvas id="gl"></canvas>
+<div id="os-layer"></div>
+<script type="module">
+import { boot } from './core/main.js';
+window.whipPhone = boot();
+</script>
+</body>
+</html>
